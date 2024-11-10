@@ -8,7 +8,6 @@ module Reg_File(
     input [31:0] write_data,
     output [31:0] op1,
     output [31:0] op2
-    // output [31:0] reg2_out  // New output to observe reg_array[2]
 );
 
     reg [31:0] reg_array [31:0];
@@ -31,13 +30,11 @@ module Reg_File(
         if (isWB & write_reg!=5'h00) begin
             reg_array[write_reg] <= write_data;
         end
-        // o_r <= reg_array[2];
     end
 
     assign op1 = (rst==1'b1) ? 32'd0 : reg_array[read_reg1];
     assign op2 = (rst==1'b1) ? 32'd0 : reg_array[read_reg2];
     assign o1 = reg_array[1];
-    // assign o2 = reg_array[2];
     assign o6 = reg_array[6];
     assign o5 = reg_array[5];
 
