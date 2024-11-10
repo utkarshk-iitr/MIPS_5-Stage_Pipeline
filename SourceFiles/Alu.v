@@ -10,12 +10,16 @@ module ALU(a, b, alusignal, result, hi, lo);
     // Multiplication result assigned to `p`
     assign p = a * b;
 
+    initial begin
+        result = 32'b0;
+        hi = 32'b0;
+        lo = 32'b0;
+    end
+
     // Combinational logic block
     always @(*) begin
         // Default values to avoid latches
         result = 32'b0;
-        hi = 32'b0;
-        lo = 32'b0;
 
         case (alusignal)
             4'b0010: result = a + b;              // Addition
