@@ -43,7 +43,6 @@ module Fetch(
         .out(pc_plus4f)
     );
 
-    // Pipeline Register Update
     always @(posedge clk ) begin
         if (rst) begin
             PC_Plus4F_r <= 32'h00000000;
@@ -56,7 +55,6 @@ module Fetch(
         end
     end
 
-    // Output Assignments
     assign instrD = InstrF_r;
     assign pcplus4D = PC_Plus4F_r;
     assign pcD = PCF_r;
