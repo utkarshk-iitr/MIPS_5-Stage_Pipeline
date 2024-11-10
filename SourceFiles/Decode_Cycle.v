@@ -11,7 +11,7 @@ module decode_cycle(
     output [3:0] alusignalE,
     output [31:0] op1E, op2E, immxE, jumpoffset, // Register values, extended immediate, and jump offset
     output [4:0] rdE, rs1E, rs2E,                // Register addresses
-    output [31:0] pcE, pcplus4E               // Program Counter and PC+4         
+    output [31:0] pcE, pcplus4E                  // Program Counter and PC+4         
 );
 
     // Declare intermediate wires and registers for storing control signals and data
