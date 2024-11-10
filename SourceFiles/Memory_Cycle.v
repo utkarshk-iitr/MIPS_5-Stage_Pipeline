@@ -31,7 +31,6 @@ module memory_cycle (
         .readdata(readDataM)
     );
 
-    // Update pipeline register values on clock edge or reset
     always @(posedge clock) begin
         if (rst) begin 
             pcplus4M_r <= 32'h00000000;
@@ -50,7 +49,6 @@ module memory_cycle (
         end
     end
 
-    // Output assignments
     assign regwrite = regwriteM_r;
     assign isloadW = isloadM_r;
     assign pcplus4W = pcplus4M_r;
