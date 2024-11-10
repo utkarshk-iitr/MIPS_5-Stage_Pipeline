@@ -1,6 +1,6 @@
 `include "Fetch_Cycle.v"
 `include "Decode_Cycle.v"
-`include "ExecuteCycle.v"
+`include "Execute_Cycle.v"
 `include "Memory_Cycle.v"
 `include "Writeback_Cycle.v"
 `include "Mux.v"
