@@ -7,6 +7,5 @@ By Register Jammers
 Avik Mandal,
 Ankit Kumar,
 Navodit Verma,
-
 Kavy Vaghela,
 Utkarsh Kumar
