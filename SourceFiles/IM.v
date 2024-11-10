@@ -10,25 +10,33 @@ module Instruct_M(pc, ir);
     for (i = 0; i < 128; i = i + 1) begin
       mem_array[i] = 0;
     end
-    // mem_array[0]=32'h00222820;    // add r1 r2 r5
-    // mem_array[1]=32'h20610006;    // addi r3 r1 6
-    // mem_array[2]=32'h00823022;    // sub r4 r2 r6
-    // mem_array[3] = 32'hAC640004;  // sw r4 4[r3]
+    //Sample Instruction 1:
+    // add r1 r2 r5
+    // addi r3 r1 6
+    // sub r4 r2 r6
+    // sw r4 4[r3]
 
-    // mem_array[0]=32'h00222820;  // add r1 r2 r5
-    // mem_array[1]=32'h00853022;  // sub r4 r5 r6
+    //Sample Instruction 2:
+    // add r1 r2 r5
+    // sub r4 r5 r6
 
-    // mem_array[0]=32'h00222820;    // add r1 r2 r5
-    // mem_array[1]=32'h20610006;    // addi r3 r1 6
-    // mem_array[2]=32'h00853022;    // sub r4 r5 r6
-    // mem_array[3] = 32'hAC640004;  // sw r4 4[r3]
+    //Sample Instruction 3:
+    // add r1 r2 r5
+    // addi r3 r1 6
+    // sub r4 r5 r6
+    // sw r4 4[r3]
 
-    // mem_array[0]=32'h8C610004;  // lw r1 4[r3]
-    // mem_array[1]=32'h00000000;  // nop
-    // mem_array[2]=32'h00221820;  // add r1 r2 r3
+    //Sample Instruction 4:
+    // lw r1 4[r3]
+    // nop
+    // add r1 r2 r3
 
-    // mem_array[0] = 32'h00220018;  // mul r1 r2
-    
+    //Sample Instruction 5:
+    // mul r1 r2
+    // slt r1 r2 r6
+    // or r1 r2 r5
+    // xori r5 r3 2
+
     i = 0;
     file = $fopen("codes.txt", "r");
 
