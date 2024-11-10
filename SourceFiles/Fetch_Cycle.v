@@ -1,8 +1,3 @@
-// `include "Mux.v"
-// `include "PC.v"
-// `include "IM.v"
-// `include "Adder.v"
-
 module Fetch(
     input clk,
     input rst,
