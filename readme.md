@@ -1,14 +1,13 @@
 # MIPS_5-Stage_Pipeline
 
-COA Project : By Register Jammers
+COA Project : 
+By Register Jammers
 
 
-Avik Mandal
+Avik Mandal,
+Ankit Kumar,
+Navodit Verma,
 
-Ankit Kumar
-
-Navodit Verma
-
-Kavy Vaghela
+Kavy Vaghela,
 
 Utkarsh Kumar
