@@ -1,0 +1,4 @@
+add r1 r2 r5
+addi r3 r1 6
+sub r4 r5 r6
+sw r4 4[r3]
