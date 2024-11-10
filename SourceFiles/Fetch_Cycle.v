@@ -37,7 +37,6 @@ module Fetch(
 
     // Instruction Memory (IM)
     Instruct_M IM (
-        .memread(~rst),
         .pc(pcf),
         .ir(instrf)
     );
