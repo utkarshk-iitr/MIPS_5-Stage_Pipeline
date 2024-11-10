@@ -1,10 +1,3 @@
-// `include "register_file.v"
-// `include "Sign_Extension.v"
-// `include "Control_Unit.v"
-// `include "Shift_Left_32Bit.v"
-// `include "Concatenate_forJump.v"
-// `include "AluControl.v"
-
 module decode_cycle(
     input clk,
     input rst,
