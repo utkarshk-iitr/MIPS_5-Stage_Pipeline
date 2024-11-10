@@ -1,5 +1,3 @@
-// `include "Data_Memory.v"
-
 module memory_cycle (
     input clock,
     input rst,
