@@ -55,13 +55,13 @@ for inst in f1:
 
     elif op[0]=='i':
         arg1 = bin(int(inst[1][1:]))[2:].zfill(5)
-        arg2 = bin(int(inst[2][1:]))[2:].zfill(5)
+        arg3 = bin(int(inst[3]))[2:].zfill(16)
 
         arr = ['blez','bgtz','bltz','bgez']
         if inst[0].lower() in arr:
             arg2 = '0'*5
         else:
-            arg3 = bin(int(inst[3]))[2:].zfill(16)
+            arg2 = bin(int(inst[2][1:]))[2:].zfill(5)
 
         ans = op[1:]+arg1+arg2+arg3
         f.write(hex(int(ans,2))[2:].upper().zfill(8))
