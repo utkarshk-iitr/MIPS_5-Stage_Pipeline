@@ -1,5 +1,3 @@
-// `include "Mux.v"
-
 module writeback_cycle(
     input clk,
     input rst,
