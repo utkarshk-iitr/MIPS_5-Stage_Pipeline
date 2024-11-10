@@ -1,8 +1,3 @@
-// `include "Mux.v"
-// `include "Adder.v"
-// `include "Shift_Left.v"
-// `include "Alu.v"
-
 module Execute(
     input clk,
     input rst,
@@ -29,8 +24,6 @@ module Execute(
     reg RegWriteE_r, MemWriteE_r, isLoadE_r, MemReadE_r;
     reg [4:0] RD_E_r;
     reg [31:0] PCPlus4E_r, ResultE_r, branchTargetE_r, op2E_r;
-
-    // Assignments for source operands
 
     // Shift and add for branch calculation
     ShiftLeft branch_shift(.inData(immxE), .outData(shifted_branch));
