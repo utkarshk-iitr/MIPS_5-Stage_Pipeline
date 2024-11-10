@@ -106,8 +106,8 @@ module Execute(
     end
 
     // Output Assignments
-    assign isbranchtakenE = jumpE || (branchE && ResultE_r != 0);
-    assign branchtargetE = branchTargetE_r;
+    assign isbranchtakenE = jumpE || (branchE && ResultE != 0);
+    assign branchtargetE = Branch;
     assign regwriteM = RegWriteE_r;
     assign memwriteM = MemWriteE_r;
     assign isloadM = isLoadE_r;
