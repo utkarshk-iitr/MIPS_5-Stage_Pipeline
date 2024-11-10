@@ -7,7 +7,7 @@ module writeback_cycle(
     input [31:0] pcplus4W,
     input [31:0] aluresultW,   // Result from ALU operation
     input [31:0] readdataW,    // Data read from memory 
-    output [31:0] resultW, // Declare as reg for use in always block
+    output [31:0] resultW,
     output regwriteW,
     output [4:0] rdW
 );
