@@ -1,6 +1,5 @@
-module Instruct_M(memread, pc, ir);
+module Instruct_M(pc, ir);
 
-    input memread;
     input [31:0] pc;
     output reg [31:0] ir;
  
@@ -18,7 +17,6 @@ module Instruct_M(memread, pc, ir);
     // mem_array[0]=32'h00222820;  // add r1, r2, r5
     // mem_array[1]=32'h00853022;  // sub r4, r5, r6
 
-
     // mem_array[0]=32'h00222820;    // add r1, r2, r5
     // mem_array[1]=32'h20610006;    // addi r3, r1, 6
     // mem_array[2]=32'h00853022;    // sub r4, r5, r6
@@ -28,12 +26,11 @@ module Instruct_M(memread, pc, ir);
     // mem_array[1]=32'h00000000;  // nop
     // mem_array[2]=32'h00221820;  // add r1, r2, r3
 
+    // mem_array[0] = 32'h00220018;  // mul r1 r2
+
   end
-    always @(memread, pc)
+    always @(pc)
     begin
-        if(memread)
-        begin
-            ir <= mem_array[pc[31:2]];
-        end
+        ir <= mem_array[pc[31:2]];
     end
 endmodule
