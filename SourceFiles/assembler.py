@@ -16,7 +16,6 @@ def get_opcode(ins):
 
 f1 = open("inst.txt","r").read().split('\n')
 f = open("codes.txt","w")
-# print(f)
 
 for inst in f1:
     inst = inst.strip().upper()
@@ -30,6 +29,11 @@ for inst in f1:
 
 
     print(inst)
+
+    if (inst[0].lower()=='nop'):
+        f.write('00000000\n')
+        continue
+        
     op = get_opcode(inst[0].lower())
     if op == "inv":
         print("Invalid Instruction")
