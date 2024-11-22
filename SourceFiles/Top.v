@@ -17,6 +17,7 @@
 `include "Alu.v"
 `include "Data_Memory.v"
 `include "Hazard.v"
+`include "Flush.v"
 
 
 module TopPipeline(
@@ -25,10 +26,10 @@ module TopPipeline(
 );
 
     // Interconnecting wires
-    wire [31:0] pcplus4D, instrD, pcD, pcE,pcplus4E, op1E, op2E, immxE, jumpoffset, aluresultM, branchtargetE;
+    wire [31:0] pcplus4D, instrD, pcD, pcE,pcplus4E, op1E, op2E, immxE, jumpoffset, aluresultM, branchtargetE,pcf;
     wire [31:0] pcplus4M, writedataM, pcplus4W, aluresultW, readdataW, resultW,readDataM;
     wire [4:0] rdW, rs1E, rs2E, rdE, rdM,rd;
-    wire isbranchtakenE, regwriteE, isimmediateE, memwriteE, isloadE, memreadE, branchE, jumpE, regwriteM;
+    wire isbranchtakenE, regwriteE, isimmediateE, memwriteE, isloadE, memreadE, branchE, jumpE, regwriteM,flush;
     wire memwriteM, isloadM, memreadM, regwriteW, isloadW,regwrite;
     wire [3:0] alusignalE;
     wire [1:0] forwardaE,forwardbE;
@@ -37,10 +38,12 @@ module TopPipeline(
     Fetch fetch(
         .clk(clk),
         .rst(rst),
+        .pcf(pcf),
         .isbranchtakenE(isbranchtakenE),
         .branchtargetE(branchtargetE),
         .pcplus4D(pcplus4D),
         .instrD(instrD),
+        .flush(flush),
         .pcD(pcD)
     );
 
@@ -70,6 +73,7 @@ module TopPipeline(
         .rs1E(rs1E),
         .rs2E(rs2E),
         .pcE(pcE),
+        .flush(flush),
         .pcplus4E(pcplus4E)
     );
 
@@ -150,13 +154,17 @@ module TopPipeline(
     forwarding hazard(
         .rst(rst), 
         .regwriteM(regwriteM), 
-        .regwrite(regwrite), 
+        .regwrite(regwrite),
+        .pcf(pcf),
+        .isbranchtakenE(isbranchtakenE),
+        .branchtargetE(branchtargetE),
         .rdM(rdM), 
         .rd(rd), 
         .rs1E(rs1E), 
         .rs2E(rs2E), 
         .isloadW(isloadW),
-        .forwardaE(forwardaE), 
+        .forwardaE(forwardaE),
+        .flush(flush), 
         .forwardbE(forwardbE)
     );
 
