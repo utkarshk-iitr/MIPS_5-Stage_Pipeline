@@ -11,7 +11,7 @@ module Reg_File(
 );
 
     reg [31:0] reg_array [31:0];
-    wire [31:0] o1, o6, o5;
+    wire [31:0] o1, o2, o3,o4,o5,o6,o7,o8,o9;
     integer i;
 
     initial begin
@@ -22,7 +22,7 @@ module Reg_File(
         reg_array[1] = 4;
         reg_array[2] = 5;
         reg_array[3] = 7;
-        reg_array[5] = 1;
+        reg_array[5] = 4;
         reg_array[4] = 8;
     end
 
@@ -35,7 +35,13 @@ module Reg_File(
     assign op1 = (rst==1'b1) ? 32'd0 : reg_array[read_reg1];
     assign op2 = (rst==1'b1) ? 32'd0 : reg_array[read_reg2];
     assign o1 = reg_array[1];
+    assign o2 = reg_array[2];
+    assign o3 = reg_array[3];
+    assign o4 = reg_array[4];
     assign o6 = reg_array[6];
     assign o5 = reg_array[5];
+    assign o7 = reg_array[7];
+    assign o8 = reg_array[8];
+    assign o9 = reg_array[9];
 
 endmodule

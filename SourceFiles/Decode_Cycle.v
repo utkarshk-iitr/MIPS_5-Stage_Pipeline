@@ -7,32 +7,29 @@ module decode_cycle(
     input regwriteW,            // Write-back control signal        
     input [31:0] resultW,       // Write-back result data
     input [4:0] rdW,
-    output regwriteE, isimmediateE, memwriteE, isloadE, memreadE, branchE, jumpE,  // Control signals for execution
-    output [3:0] alusignalE,
-    output [31:0] op1E, op2E, immxE, jumpoffset, // Register values, extended immediate, and jump offset
-    output [4:0] rdE, rs1E, rs2E,                // Register addresses
-    output [31:0] pcE, pcplus4E                  // Program Counter and PC+4         
+    input flush,
+    output reg regwriteE, isimmediateE, memwriteE, isloadE, memreadE, branchE, jumpE,  // Control signals for execution
+    output reg [3:0] alusignalE,
+    output reg [31:0] op1E, op2E, immxE, jumpoffset, // Register values, extended immediate, and jump offset
+    output reg [4:0] rdE, rs1E, rs2E,                // Register addresses
+    output reg [31:0] pcE, pcplus4E                  // Program Counter and PC+4         
 );
 
-    // Declare intermediate wires and registers for storing control signals and data
+    // Declare intermediate wires for control signals and data
     wire [1:0] aluopD;
     wire regdestD, regwriteD, isimmediateD, memreadD, memwriteD, isloadD, branchD, jumpD;
-    wire [31:0] op1D, op2D, immxD;
-    wire [4:0] rs1D, rs2D;
-    wire [27:0] shiftedJumpOffset;  // Shifted jump offset
-    wire [31:0] fullJumpOffset;     // Final jump offset after concatenation
+    wire [31:0] op1D, op2D, immxD, fullJumpOffset;
+    wire [4:0] rs1D, rs2D, rdD;
     wire [3:0] alusignalD;
 
-    reg regwriteD_r, isimmediateD_r, memwriteD_r, isloadD_r, memreadD_r, branchD_r, jumpD_r;
-    reg [31:0] op1_r, op2_r, immx_r;
-    reg [4:0] rd_r, rs1_r, rs2_r;
-    reg [31:0] pc_r, pcplus4_r;
-    reg [3:0] alusignal_r;
-    reg [31:0] jumpoffset_r;
+    wire [31:0] flushedOp1D, flushedOp2D, flushedImmxD, flushedJumpOffset, flushedPcD, flushedPcplus4D;
+    wire [3:0] flushedAluSignalD;
+    wire regwriteDCH, isimmediateDCH, memwriteDCH, isloadDCH, memreadDCH, branchDCH, jumpDCH;
+    wire [4:0] flushedRdD, flushedRs1D, flushedRs2D;
 
     // Control Unit instantiation
     Control_Unit control_unit(
-        .opcode(instrD[31:26]),   // MIPS opcode field
+        .opcode(instrD[31:26]),   
         .IR(instrD),
         .AluOp(aluopD),
         .RegDest(regdestD),
@@ -49,12 +46,12 @@ module decode_cycle(
     Reg_File register_file(
         .rst(rst),
         .isWB(regwriteW),
-        .read_reg1(instrD[25:21]),   // RS1
-        .read_reg2(instrD[20:16]),   // RS2
+        .read_reg1(instrD[25:21]),   
+        .read_reg2(instrD[20:16]),   
         .op1(op1D),
         .op2(op2D),
-        .write_reg(rdW), // Write-back destination register
-        .write_data(resultW)      // Write-back data
+        .write_reg(rdW), 
+        .write_data(resultW)
     );
 
     // Sign Extension module instantiation
@@ -63,86 +60,103 @@ module decode_cycle(
         .outData(immxD)
     );
 
-    // Shift left the jump immediate by 2 bits
+    // Shift and concatenate for jump address
     ShiftLeftForJump jump_shift(
         .inData(instrD[25:0]),
-        .outData(shiftedJumpOffset)
+        .outData(fullJumpOffset[27:0])
     );
-
-    // Concatenate PC upper bits and shifted offset for full jump address
-    ConcatForJump jump_concat(
-        .pcUpperBits(pcplus4D[31:28]),
-        .shiftedAddress(shiftedJumpOffset),
-        .result(fullJumpOffset)
-    );
+    assign fullJumpOffset[31:28] = pcplus4D[31:28];
 
     // ALU Control instantiation
-    ALUcontrol Alu_control(
-        
+    ALUcontrol alu_control(
         .funct(instrD[5:0]),
         .opcode(instrD[31:26]),
         .ALUop(aluopD),
         .ALUsignal(alusignalD)
     );
 
-    // Pipeline registers: Store control and data signals at every clock cycle
-    always @(posedge clk ) begin
+    // Flushing logic
+    Flush flush_module(
+        .flush(flush),
+        .alusignalD(alusignalD),
+        .op1D(op1D),
+        .op2D(op2D),
+        .immxD(immxD),
+        .jumpoffset(fullJumpOffset),
+        .regwriteD(regwriteD),
+        .isimmediateD(isimmediateD),
+        .memwriteD(memwriteD),
+        .isloadD(isloadD),
+        .memreadD(memreadD),
+        .branchD(branchD),
+        .jumpD(jumpD),
+        .pcD(pcD),
+        .pcplus4D(pcplus4D),
+        .rdD(rdD),
+        .rs1D(rs1D),
+        .rs2D(rs2D),
+        .alusignalDCH(flushedAluSignalD),
+        .op1DCH(flushedOp1D),
+        .op2DCH(flushedOp2D),
+        .immxDCH(flushedImmxD),
+        .jumpoffsetCH(flushedJumpOffset),
+        .regwriteDCH(regwriteDCH),
+        .isimmediateDCH(isimmediateDCH),
+        .memwriteDCH(memwriteDCH),
+        .isloadDCH(isloadDCH),
+        .memreadDCH(memreadDCH),
+        .branchDCH(branchDCH),
+        .jumpDCH(jumpDCH),
+        .pcDCH(flushedPcD),
+        .pcplus4DCH(flushedPcplus4D),
+        .rdDCH(flushedRdD),
+        .rs1DCH(flushedRs1D),
+        .rs2DCH(flushedRs2D)
+    );
+
+    assign rdD = (regdestD) ? instrD[15:11] : instrD[20:16]; 
+    assign rs1D = instrD[25:21];
+    assign rs2D = instrD[20:16];
+
+    // Pipeline registers: Store control and data signals
+    always @(posedge clk or posedge rst) begin
         if (rst) begin
-            alusignal_r     <= 4'b0000;
-            regwriteD_r <= 1'b0;
-            isimmediateD_r <= 1'b0;
-            memwriteD_r <= 1'b0;
-            isloadD_r   <= 1'b0;
-            memreadD_r  <= 1'b0;
-            branchD_r   <= 1'b0;
-            jumpD_r     <= 1'b0;
-            op1_r       <= 32'b0;
-            op2_r       <= 32'b0;
-            immx_r      <= 32'b0;
-            rd_r        <= 5'b00000;
-            pc_r        <= 32'b0;
-            pcplus4_r   <= 32'b0;
-            rs1_r       <= 5'b0;
-            rs2_r       <= 5'b0;
-            jumpoffset_r <= 32'h00000000;
+            alusignalE     <= 4'b0000;
+            regwriteE      <= 1'b0;
+            isimmediateE   <= 1'b0;
+            memwriteE      <= 1'b0;
+            isloadE        <= 1'b0;
+            memreadE       <= 1'b0;
+            branchE        <= 1'b0;
+            jumpE          <= 1'b0;
+            op1E           <= 32'b0;
+            op2E           <= 32'b0;
+            immxE          <= 32'b0;
+            rdE            <= 5'b0;
+            pcE            <= 32'b0;
+            pcplus4E       <= 32'b0;
+            rs1E           <= 5'b0;
+            rs2E           <= 5'b0;
+            jumpoffset     <= 32'b0;
         end else begin
-            alusignal_r     <= alusignalD;
-            regwriteD_r <= regwriteD;
-            isimmediateD_r <= isimmediateD;
-            memwriteD_r <= memwriteD;
-            isloadD_r   <= isloadD;
-            memreadD_r  <= memreadD;
-            branchD_r   <= branchD;
-            jumpD_r     <= jumpD;
-            op1_r       <= op1D;
-            op2_r       <= op2D;
-            immx_r      <= immxD;
-            rd_r        <= (regdestD) ? instrD[15:11] : instrD[20:16]; // Destination reg based on RegDest
-            pc_r        <= pcD;
-            pcplus4_r   <= pcplus4D;
-            rs1_r       <= instrD[25:21];
-            rs2_r       <= instrD[20:16];
-            jumpoffset_r <= fullJumpOffset;
+            alusignalE     <= flushedAluSignalD;
+            regwriteE      <= regwriteDCH;
+            isimmediateE   <= isimmediateDCH;
+            memwriteE      <= memwriteDCH;
+            isloadE        <= isloadDCH;
+            memreadE       <= memreadDCH;
+            branchE        <= branchDCH;
+            jumpE          <= jumpDCH;
+            op1E           <= flushedOp1D;
+            op2E           <= flushedOp2D;
+            immxE          <= flushedImmxD;
+            rdE            <= flushedRdD;
+            pcE            <= flushedPcD;
+            pcplus4E       <= flushedPcplus4D;
+            rs1E           <= flushedRs1D;
+            rs2E           <= flushedRs2D;
+            jumpoffset     <= flushedJumpOffset;
         end
     end
-
-    // Output assignments to pass values to the next stage
-    assign alusignalE     = alusignal_r;
-    assign regwriteE      = regwriteD_r;
-    assign isimmediateE   = isimmediateD_r;
-    assign memwriteE      = memwriteD_r;
-    assign isloadE        = isloadD_r;
-    assign memreadE       = memreadD_r;
-    assign branchE        = branchD_r;
-    assign jumpE          = jumpD_r;
-    assign op1E           = op1_r;
-    assign op2E           = op2_r;
-    assign immxE          = immx_r;
-    assign rdE            = rd_r;
-    assign pcE            = pc_r;
-    assign pcplus4E       = pcplus4_r;
-    assign rs1E           = rs1_r;
-    assign rs2E           = rs2_r;
-    assign jumpoffset     = jumpoffset_r;  
 
 endmodule
