@@ -1,0 +1,8 @@
+li r1 1
+li r2 10
+li r3 1
+beq r2 r0 4
+mul r1 r2
+mflo r1
+sub r2 r3 r2
+j 3
