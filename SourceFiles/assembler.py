@@ -43,28 +43,32 @@ for inst in f1:
 
     if op[0]=='r':
         opcode = '0'*6
-        shamt = '0'*5
+        shamt = '0'*5 
+        
         arr1 = ['mfhi','mflo','dfhi','dflo']
+        arr = ['mul','mulu','div','divu']
+        arr2 = ['lsl','asr','lsr']
+        
         if inst[0].lower() in arr1:
             arg1 = '0'*5
             arg2 = '0'*5
             arg3 = bin(int(inst[1][1:]))[2:].zfill(5) 
-        else:
+
+        elif inst[0].lower() in arr:
             arg1 = bin(int(inst[1][1:]))[2:].zfill(5) 
             arg2 = bin(int(inst[2][1:]))[2:].zfill(5) 
+            arg3 = '0'*5 
 
-        arr = ['mul','mulu','div','divu']
-        if inst[0].lower() in arr:
-            arg3 = '0'*5
-        elif inst[0].lower() not in arr1:
-            arg3 = bin(int(inst[3][1:]))[2:].zfill(5) 
-
-        arr2 = ['lsl','asr','lsr']
-        if inst[0].lower() in arr2:
+        elif inst[0].lower() in arr2:
             arg1 = bin(int(inst[2][1:]))[2:].zfill(5)
             agr2 = '0'*5
             arg3 = bin(int(inst[1][1:]))[2:].zfill(5)
             shamt = bin(int(inst[3]))[2:].zfill(5)
+
+        else:
+            arg1 = bin(int(inst[1][1:]))[2:].zfill(5) 
+            arg2 = bin(int(inst[2][1:]))[2:].zfill(5) 
+            arg3 = bin(int(inst[3][1:]))[2:].zfill(5)
 
         ans = opcode+arg1+arg2+arg3+shamt+op[1:]
         f.write(hex(int(ans,2))[2:].upper().zfill(8))
