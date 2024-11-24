@@ -1,5 +1,5 @@
 def get_opcode(ins):
-    r = {'add':32,'addu':33,'sub':34,'subu':35,'mul':24,'mulu':25,'div':26,'divu':27,'slt':42,'sltu':43,'and':36,'or':37,'nor':39,'xor':40,'mfhi':28,'mflo':29,'dfhi':30,'dflo':31}
+    r = {'add':32,'addu':33,'sub':34,'subu':35,'mul':24,'mulu':25,'div':26,'divu':27,'slt':42,'sltu':43,'and':36,'or':37,'nor':39,'xor':40,'mfhi':28,'mflo':29,'dfhi':30,'dflo':31,'lsl':44,'asr':45,'lsr':46}
     i = {'addi':8,'addiu':9,'slti':10,'sltiu':11,'andi':12,'ori':13,'xori':14,'lw':35,'sw':43,'beq':4,'bne':5,'blez':6,'bgtz':7,'bltz':1,'bgez':3}
     j = {'j':2}
 
@@ -43,6 +43,7 @@ for inst in f1:
 
     if op[0]=='r':
         opcode = '0'*6
+        shamt = '0'*5
         arr1 = ['mfhi','mflo','dfhi','dflo']
         if inst[0].lower() in arr1:
             arg1 = '0'*5
@@ -58,7 +59,14 @@ for inst in f1:
         elif inst[0].lower() not in arr1:
             arg3 = bin(int(inst[3][1:]))[2:].zfill(5) 
 
-        ans = opcode+arg1+arg2+arg3+'0'*5+op[1:]
+        arr2 = ['lsl','asr','lsr']
+        if inst[0].lower() in arr2:
+            arg1 = bin(int(inst[2][1:]))[2:].zfill(5)
+            agr2 = '0'*5
+            arg3 = bin(int(inst[1][1:]))[2:].zfill(5)
+            shamt = bin(int(inst[3]))[2:].zfill(5)
+
+        ans = opcode+arg1+arg2+arg3+shamt+op[1:]
         f.write(hex(int(ans,2))[2:].upper().zfill(8))
 
     elif op[0]=='i':
