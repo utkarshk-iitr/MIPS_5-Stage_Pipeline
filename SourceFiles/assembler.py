@@ -27,13 +27,15 @@ for inst in f1:
         inst[-1],inst[-2] = inst[-2],inst[-1]
         inst[-2],inst[-3] = inst[-3],inst[-2]
 
-
-    print(inst)
-
     if (inst[0].lower()=='nop'):
         f.write('00000000\n')
         continue
+
+    if (inst[0].lower()=='mov'):
+        inst[0] = 'ADDI'
+        inst.insert(1,'R0')
         
+    print(inst)
     op = get_opcode(inst[0].lower())
     if op == "inv":
         print("Invalid Instruction")
