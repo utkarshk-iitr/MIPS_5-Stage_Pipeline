@@ -61,7 +61,7 @@ for inst in f1:
 
         elif inst[0].lower() in arr2:
             arg1 = bin(int(inst[2][1:]))[2:].zfill(5)
-            agr2 = '0'*5
+            arg2 = '0'*5
             arg3 = bin(int(inst[1][1:]))[2:].zfill(5)
             shamt = bin(int(inst[3]))[2:].zfill(5)
 
